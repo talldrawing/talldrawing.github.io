@@ -3,8 +3,8 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Joseph Villaflor Medina · Notes & Experiments</title>
-  <meta name="description" content="Interactive personal page: Japanese word/grammar of the day, Core 2K/6K progress tracker, and a doodle chalkboard.">
+  <title>Joseph Villaflor‑Medina · Notes & Experiments</title>
+  <meta name="description" content="Interactive page: JP word/grammar of the day, public Core 2K/6K stats (via progress.json), and a public chalkboard image (chalk.png) with owner editing mode.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
@@ -34,6 +34,9 @@
     .bar{width:0;height:10px;border-radius:999px;background:linear-gradient(90deg,var(--accent),var(--accent2))}
     .toolbar{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:10px}
     canvas{background:#0a0a0a;border:1px solid var(--line);border-radius:12px;touch-action:none;width:100%;height:420px}
+    .note{border-left:3px solid var(--accent); padding:8px 12px; background:rgba(96,165,250,.08); border-radius:8px}
+    .hidden{display:none}
+    img.chalk{width:100%; height:auto; border-radius:12px; border:1px solid var(--line)}
   </style>
 </head>
 <body>
@@ -49,8 +52,8 @@
     </nav>
 
     <header class="hero">
-      <h1><span style="background:linear-gradient(90deg,var(--accent),var(--accent2));-webkit-background-clip:text;background-clip:text;color:transparent">Joseph Villaflor Medina</span></h1>
-      <p class="tag">Tech sales in progress · curious about dev tools · 日本語 learner · gym habit</p>
+      <h1><span style="background:linear-gradient(90deg,var(--accent),var(--accent2));-webkit-background-clip:text;background-clip:text;color:transparent">Joseph Villaflor‑Medina</span></h1>
+      <p class="tag">Tech sales in progress · curious about dev tools · 日本語：N1への道 · gym rat</p>
     </header>
 
     <!-- Japanese: Word & Grammar of the Day -->
@@ -63,12 +66,12 @@
     </section>
 
     <div class="grid">
-      <!-- Core 2K/6K Progress Tracker -->
+      <!-- Core 2K/6K Progress (Public via progress.json; fallback to local) -->
       <section class="card" id="anki">
         <h2>Study Progress (Core 2K/6K)</h2>
-        <p class="muted small">Private to your browser (localStorage). Update numbers and click Save.</p>
+        <p class="muted small" id="progMode">Loading…</p>
 
-        <div class="row">
+        <div class="row" id="inputsRow">
           <label>Reviews today</label>
           <input class="input" type="number" id="reviews" min="0" style="width:110px"/>
           <label>New cards today</label>
@@ -104,27 +107,32 @@
           <div class="row small muted"><span id="progTextLearned"></span></div>
         </div>
 
-        <div class="row small" style="margin-top:10px">
+        <div class="row small" style="margin-top:10px" id="importExportRow">
           <button class="btn" id="exportProg">Export JSON</button>
           <label for="importFile" class="btn">Import JSON</label>
           <input id="importFile" type="file" accept="application/json" style="display:none"/>
         </div>
       </section>
 
-      <!-- Digital Chalkboard -->
+      <!-- Public Chalkboard (read-only by default, owner can switch to edit mode) -->
       <section class="card" id="board">
         <h2>Digital Chalkboard</h2>
-        <div class="toolbar">
+        <p class="note small" id="boardNote">Public display: showing <code>chalk.png</code> from this repo. Only the owner can update it by committing a new image. Add <code>?owner=1</code> to the URL to enable local edit mode.</p>
+
+        <img id="chalkPublic" class="chalk" src="./chalk.png" alt="Chalkboard image (public)" onerror="this.classList.add('hidden');document.getElementById('noChalk').classList.remove('hidden');" />
+        <p class="muted small hidden" id="noChalk">No <code>chalk.png</code> found yet. Upload one to the repo to display.</p>
+
+        <div class="toolbar hidden" id="toolbar">
           <label>Tool:</label>
           <button class="btn" id="penBtn" type="button">Pen</button>
           <button class="btn" id="eraserBtn" type="button">Eraser</button>
           <label>Size:</label>
           <input type="range" id="size" min="2" max="24" value="6"/>
           <button class="btn" id="clear" type="button">Clear</button>
-          <button class="btn" id="saveImg" type="button">Save as PNG</button>
+          <button class="btn" id="saveImg" type="button">Download PNG</button>
         </div>
-        <canvas id="chalk" width="800" height="420"></canvas>
-        <p class="muted small">Auto-saves to your browser. Try mouse or touch. "Kilroy was here" ready.</p>
+        <canvas id="chalk" class="hidden" width="800" height="420"></canvas>
+        <p class="muted small hidden" id="editHint">Editing locally (owner mode). Download PNG and commit it as <code>chalk.png</code> to publish.</p>
       </section>
     </div>
 
@@ -138,10 +146,14 @@
       </ul>
     </section>
 
-    <footer class="muted" style="text-align:center;margin-top:22px">© <span id="y"></span> Joseph Villaflor Medina — Built on GitHub Pages</footer>
+    <footer class="muted" style="text-align:center;margin-top:22px">© <span id="y"></span> Joseph Villaflor‑Medina — Built on GitHub Pages</footer>
   </div>
 
   <script>
+    // --- Owner mode flag (append ?owner=1 to enable local editing of chalkboard) ---
+    const params = new URLSearchParams(location.search);
+    const OWNER_MODE = params.get('owner') === '1';
+
     // --- Japanese Word & Grammar of the Day ---
     const words = [
       {jp:'挑戦 (ちょうせん)', en:'challenge; try; attempt', ex:'新しい挑戦をする。'},
@@ -164,8 +176,8 @@
     document.getElementById('jpGrammar').innerHTML = `<strong>Grammar:</strong> ${g.pt} — ${g.en}<br><span class="muted">例: ${g.ex}</span>`;
     document.getElementById('seed').textContent = daySeed();
 
-    // --- Study Progress (localStorage) ---
-    const GOAL = 100; // daily reviews target; tweak if you want
+    // --- Study Progress (public via progress.json; fallback to localStorage) ---
+    const GOAL_DEFAULT = 100;
     const reviews = document.getElementById('reviews');
     const news = document.getElementById('new');
     const streak = document.getElementById('streak');
@@ -176,39 +188,17 @@
     const progTextDaily = document.getElementById('progTextDaily');
     const progBarLearned = document.getElementById('progBarLearned');
     const progTextLearned = document.getElementById('progTextLearned');
+    const progMode = document.getElementById('progMode');
+    const importExportRow = document.getElementById('importExportRow');
+    const inputsRow = document.getElementById('inputsRow');
 
     function clampPct(n){ return Math.max(0, Math.min(100, Math.round(n))); }
 
-    function loadProgress(){
-      const data = JSON.parse(localStorage.getItem('jpProgress') || '{}');
-      reviews.value = data.reviews ?? 0;
-      news.value = data.new ?? 0;
-      streak.value = data.streak ?? 0;
-      learned.value = data.learned ?? 0;
-      mature.value = data.mature ?? 0;
-      deckSizeInput.value = data.deckSize ?? 6000;
-      updateBars();
-    }
-
-    function saveProgress(){
-      const data = {
-        reviews: Number(reviews.value || 0),
-        new: Number(news.value || 0),
-        streak: Number(streak.value || 0),
-        learned: Number(learned.value || 0),
-        mature: Number(mature.value || 0),
-        deckSize: Number(deckSizeInput.value || 6000),
-        lastSaved: new Date().toISOString()
-      };
-      localStorage.setItem('jpProgress', JSON.stringify(data));
-      updateBars();
-    }
-
-    function updateBars(){
+    function updateBars(goal){
       const rev = Number(reviews.value || 0);
-      const pctDaily = clampPct((rev / GOAL) * 100);
+      const pctDaily = clampPct((rev / (goal||GOAL_DEFAULT)) * 100);
       progBarDaily.style.width = pctDaily + '%';
-      progTextDaily.textContent = `${rev}/${GOAL} reviews (${pctDaily}%) · New: ${Number(news.value||0)} · Streak: ${Number(streak.value||0)}d`;
+      progTextDaily.textContent = `${rev}/${goal||GOAL_DEFAULT} reviews (${pctDaily}%) · New: ${Number(news.value||0)} · Streak: ${Number(streak.value||0)}d`;
 
       const learnedNum = Number(learned.value || 0);
       const deck = Math.max(1, Number(deckSizeInput.value || 6000));
@@ -218,104 +208,144 @@
       progTextLearned.textContent = `${learnedNum}/${deck} learned (${pctLearned}%) · Mature: ${mat}`;
     }
 
-    document.getElementById('saveProg').addEventListener('click', saveProgress);
-    document.getElementById('markStudied').addEventListener('click', () => {
+    function loadLocal(){
+      const data = JSON.parse(localStorage.getItem('jpProgress') || '{}');
+      reviews.value = data.reviews ?? 0;
+      news.value = data.new ?? 0;
+      streak.value = data.streak ?? 0;
+      learned.value = data.learned ?? 0;
+      mature.value = data.mature ?? 0;
+      deckSizeInput.value = data.deckSize ?? 6000;
+      updateBars(data.goal||GOAL_DEFAULT);
+      progMode.textContent = 'Private to your browser (local mode)';
+      importExportRow.classList.remove('hidden');
+      inputsRow.classList.remove('hidden');
+    }
+
+    function saveLocal(){
+      const data = {
+        reviews: Number(reviews.value || 0),
+        new: Number(news.value || 0),
+        streak: Number(streak.value || 0),
+        learned: Number(learned.value || 0),
+        mature: Number(mature.value || 0),
+        deckSize: Number(deckSizeInput.value || 6000),
+        goal: GOAL_DEFAULT,
+        lastSaved: new Date().toISOString()
+      };
+      localStorage.setItem('jpProgress', JSON.stringify(data));
+      updateBars(data.goal);
+    }
+
+    async function tryLoadPublic(){
+      try {
+        const res = await fetch('./progress.json', {cache:'no-store'});
+        if(!res.ok) throw new Error('no public progress');
+        const p = await res.json();
+        // Fill inputs then lock them (public display)
+        reviews.value = p.reviewsToday ?? 0;
+        news.value = p.newToday ?? 0;
+        streak.value = p.streak ?? 0;
+        learned.value = p.learned ?? 0;
+        mature.value = p.mature ?? 0;
+        deckSizeInput.value = p.deckSize ?? 6000;
+        updateBars(p.goal||GOAL_DEFAULT);
+        progMode.textContent = 'Public display (from progress.json)';
+        // read-only for visitors
+        for (const el of [reviews, news, streak, learned, mature, deckSizeInput]) { el.readOnly = true; el.disabled = true; }
+        importExportRow.classList.add('hidden');
+        inputsRow.classList.add('hidden');
+        return true;
+      } catch(e){
+        return false;
+      }
+    }
+
+    document.getElementById('saveProg')?.addEventListener('click', saveLocal);
+    document.getElementById('markStudied')?.addEventListener('click', () => {
       const rev = Number(reviews.value || 0);
       if (rev > 0) {
         streak.value = Number(streak.value || 0) + 1;
-        saveProgress();
+        saveLocal();
       } else {
         alert('Do at least 1 review to count today!');
       }
     });
 
-    reviews.addEventListener('input', updateBars);
-    news.addEventListener('input', updateBars);
-    streak.addEventListener('input', updateBars);
-    learned.addEventListener('input', updateBars);
-    mature.addEventListener('input', updateBars);
-    deckSizeInput.addEventListener('input', updateBars);
+    for (const el of [reviews, news, streak, learned, mature, deckSizeInput]) {
+      el?.addEventListener('input', ()=>updateBars());
+    }
 
-    document.getElementById('exportProg').addEventListener('click', () => {
-      const data = localStorage.getItem('jpProgress') || '{}';
-      const blob = new Blob([data], {type: 'application/json'});
-      const a = document.createElement('a');
-      a.href = URL.createObjectURL(blob);
-      a.download = 'jpProgress.json';
-      a.click();
-    });
+    (async function initProgress(){
+      const ok = await tryLoadPublic();
+      if(!ok){ loadLocal(); }
+    })();
 
-    document.getElementById('importFile').addEventListener('change', (e) => {
-      const file = e.target.files?.[0];
-      if (!file) return;
-      const reader = new FileReader();
-      reader.onload = () => {
-        try {
-          const parsed = JSON.parse(reader.result);
-          localStorage.setItem('jpProgress', JSON.stringify(parsed));
-          loadProgress();
-          alert('Progress imported!');
-        } catch (err) {
-          alert('Invalid JSON file.');
-        }
-      };
-      reader.readAsText(file);
-    });
-
-    loadProgress();
-
-    // --- Digital Chalkboard ---
+    // --- Chalkboard: public (image) vs owner edit (canvas) ---
+    const chalkImg = document.getElementById('chalkPublic');
+    const toolbar = document.getElementById('toolbar');
     const canvas = document.getElementById('chalk');
-    const ctx = canvas.getContext('2d');
-    let drawing=false, lastX=0, lastY=0, size=document.getElementById('size').value, erase=false;
+    const editHint = document.getElementById('editHint');
+    const boardNote = document.getElementById('boardNote');
 
-    function resizeForHiDPI(){
-      const ratio = window.devicePixelRatio||1;
-      const w = canvas.clientWidth, h = canvas.clientHeight;
-      if(!w||!h) return;
-      canvas.width = w*ratio; canvas.height = h*ratio; ctx.setTransform(ratio,0,0,ratio,0,0);
-      restoreSketch();
+    if (OWNER_MODE) {
+      // hide public image; show canvas + tools
+      chalkImg.classList.add('hidden');
+      toolbar.classList.remove('hidden');
+      canvas.classList.remove('hidden');
+      editHint.classList.remove('hidden');
+      boardNote.innerHTML = 'Owner mode: draw locally, then Download PNG and commit as <code>chalk.png</code> to publish.';
     }
 
-    function start(x,y){ drawing=true; lastX=x; lastY=y; }
-    function line(x,y){
-      if(!drawing) return;
-      ctx.lineCap='round'; ctx.lineJoin='round';
-      ctx.strokeStyle = erase? '#0a0a0a' : '#e5e7eb';
-      ctx.lineWidth = size;
-      ctx.beginPath(); ctx.moveTo(lastX,lastY); ctx.lineTo(x,y); ctx.stroke();
-      lastX=x; lastY=y; saveSketch();
+    if (OWNER_MODE) {
+      const ctx = canvas.getContext('2d');
+      let drawing=false, lastX=0, lastY=0, size=document.getElementById('size').value, erase=false;
+
+      function resizeForHiDPI(){
+        const ratio = window.devicePixelRatio||1;
+        const w = canvas.clientWidth, h = canvas.clientHeight;
+        if(!w||!h) return;
+        canvas.width = w*ratio; canvas.height = h*ratio; ctx.setTransform(ratio,0,0,ratio,0,0);
+      }
+      function start(x,y){ drawing=true; lastX=x; lastY=y; }
+      function line(x,y){
+        if(!drawing) return;
+        ctx.lineCap='round'; ctx.lineJoin='round';
+        ctx.strokeStyle = erase? '#0a0a0a' : '#e5e7eb';
+        ctx.lineWidth = size;
+        ctx.beginPath(); ctx.moveTo(lastX,lastY); ctx.lineTo(x,y); ctx.stroke();
+        lastX=x; lastY=y;
+      }
+      function end(){ drawing=false; }
+      function pos(e){
+        const r=canvas.getBoundingClientRect();
+        if(e.touches){ return {x:e.touches[0].clientX-r.left, y:e.touches[0].clientY-r.top}; }
+        return {x:e.clientX-r.left, y:e.clientY-r.top};
+      }
+
+      canvas.addEventListener('mousedown', e=> start(pos(e).x,pos(e).y));
+      canvas.addEventListener('mousemove', e=> line(pos(e).x,pos(e).y));
+      window.addEventListener('mouseup', end);
+      canvas.addEventListener('touchstart', e=>{e.preventDefault(); const p=pos(e); start(p.x,p.y)});
+      canvas.addEventListener('touchmove', e=>{e.preventDefault(); const p=pos(e); line(p.x,p.y)});
+      canvas.addEventListener('touchend', end);
+
+      document.getElementById('penBtn').onclick=()=>{erase=false};
+      document.getElementById('eraserBtn').onclick=()=>{erase=true};
+      document.getElementById('size').oninput=(e)=> size=e.target.value;
+      document.getElementById('clear').onclick=()=>{ ctx.clearRect(0,0,canvas.width,canvas.height); };
+      document.getElementById('saveImg').onclick=()=>{
+        const url = canvas.toDataURL('image/png');
+        const a=document.createElement('a'); a.href=url; a.download='chalk.png'; a.click();
+      };
+
+      const ro = new ResizeObserver(()=>{ resizeForHiDPI(); });
+      ro.observe(canvas);
+      window.addEventListener('load', resizeForHiDPI);
     }
-    function end(){ drawing=false; }
 
-    function pos(e){
-      const r=canvas.getBoundingClientRect();
-      if(e.touches){ return {x:e.touches[0].clientX-r.left, y:e.touches[0].clientY-r.top}; }
-      return {x:e.clientX-r.left, y:e.clientY-r.top};
-    }
-
-    canvas.addEventListener('mousedown', e=> start(pos(e).x,pos(e).y));
-    canvas.addEventListener('mousemove', e=> line(pos(e).x,pos(e).y));
-    window.addEventListener('mouseup', end);
-    canvas.addEventListener('touchstart', e=>{e.preventDefault(); const p=pos(e); start(p.x,p.y)});
-    canvas.addEventListener('touchmove', e=>{e.preventDefault(); const p=pos(e); line(p.x,p.y)});
-    canvas.addEventListener('touchend', end);
-
-    document.getElementById('penBtn').onclick=()=>{erase=false};
-    document.getElementById('eraserBtn').onclick=()=>{erase=true};
-    document.getElementById('size').oninput=(e)=> size=e.target.value;
-    document.getElementById('clear').onclick=()=>{ ctx.clearRect(0,0,canvas.width,canvas.height); saveSketch(); };
-    document.getElementById('saveImg').onclick=()=>{
-      const url = canvas.toDataURL('image/png');
-      const a=document.createElement('a'); a.href=url; a.download='chalkboard.png'; a.click();
-    };
-
-    function saveSketch(){ try{ localStorage.setItem('chalkSketch', canvas.toDataURL('image/png')); }catch(e){} }
-    function restoreSketch(){ const data = localStorage.getItem('chalkSketch'); if(!data) return; const img=new Image(); img.onload=()=>{ ctx.drawImage(img,0,0,canvas.clientWidth,canvas.clientHeight); }; img.src=data; }
-
-    const resizeObserver = new ResizeObserver(()=>{ resizeForHiDPI(); });
-    resizeObserver.observe(canvas);
-    window.addEventListener('load', ()=>{ document.getElementById('y').textContent=new Date().getFullYear(); resizeForHiDPI(); });
+    // Footer year
+    document.getElementById('y').textContent = new Date().getFullYear();
   </script>
 </body>
 </html>
