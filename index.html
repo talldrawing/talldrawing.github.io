@@ -3,168 +3,319 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Joseph Villaflor‑Medina · Notes from a Banker Exploring Tech Sales</title>
-  <meta name="description" content="Sales professional exploring tech sales. UCLA grad. CRM-driven. Japanese learner & fitness enthusiast.">
-  <!-- Font -->
+  <title>Joseph Villaflor Medina · Notes & Experiments</title>
+  <meta name="description" content="Interactive personal page: Japanese word/grammar of the day, Core 2K/6K progress tracker, and a doodle chalkboard.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
   <style>
-    :root {
-      --bg: #0b1220;
-      --bg-soft: #0f172a; /* slate-900 */
-      --card: #111827;    /* gray-900 */
-      --muted: #94a3b8;   /* slate-400 */
-      --text: #e5e7eb;    /* gray-200 */
-      --line: #1f2937;    /* gray-800 */
-      --accent: #60a5fa;  /* blue-400 */
-      --accent-2: #a78bfa;/* violet-400 */
-      --radius: 18px;
-      --shadow: 0 10px 30px rgba(0,0,0,.35);
-    }
-    @media (prefers-color-scheme: light) {
-      :root { --bg: #f6f7fb; --bg-soft: #ffffff; --card: #ffffff; --text: #0b1220; --muted:#475569; --line:#e5e7eb; --shadow: 0 8px 20px rgba(2,6,23,.08);} 
-      body { background: linear-gradient(180deg, #eef2ff 0%, #f8fafc 100%) !important; }
-    }
-    * { box-sizing: border-box; }
-    html, body { height: 100%; }
-    body {
-      margin: 0;
-      font-family: 'Inter', system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji","Segoe UI Emoji";
-      background: radial-gradient(1400px 500px at 50% -10%, #172554, var(--bg));
-      color: var(--text);
-      line-height: 1.65;
-    }
-    .wrap { max-width: 980px; margin: 0 auto; padding: 28px 20px 80px; }
-
-    /* NAV */
-    .nav {
-      display: flex; align-items: center; justify-content: space-between; gap: 16px; margin-bottom: 28px;
-    }
-    .brand { display:flex; align-items:center; gap:10px; text-decoration:none; color:inherit; }
-    .brand-logo {
-      width: 40px; height: 40px; border-radius: 12px; background: linear-gradient(135deg, var(--accent), var(--accent-2));
-      box-shadow: var(--shadow);
-      display:flex; align-items:center; justify-content:center; font-weight:700; color:white;
-    }
-    .brand span { font-weight: 700; letter-spacing: .2px; }
-    .nav a.btn { text-decoration: none; padding: 10px 16px; border:1px solid var(--line); border-radius: 999px; color: var(--text); font-weight:600; }
-    .nav a.btn:hover { border-color: transparent; background: rgba(255,255,255,.06); }
-
-    /* HERO */
-    .hero {
-      background: linear-gradient(180deg, rgba(96,165,250,.18), rgba(167,139,250,.12));
-      border:1px solid var(--line); border-radius: var(--radius); box-shadow: var(--shadow);
-      padding: 36px 24px; text-align: center;
-    }
-    .hero h1 { margin: 6px 0 10px; font-size: clamp(28px, 5vw, 40px); line-height: 1.15; }
-    .hero p { color: var(--muted); margin: 0 0 18px; }
-    .chips { display:flex; flex-wrap:wrap; gap:10px; justify-content:center; }
-    .chip { border:1px solid var(--line); padding: 6px 10px; border-radius:999px; color: var(--muted); font-size:14px; }
-
-    /* GRID SECTIONS */
-    .grid { display:grid; gap: 18px; margin-top: 22px; }
-    @media (min-width: 820px){ .grid { grid-template-columns: 1.2fr 1fr; } }
-    .card { background: var(--card); border:1px solid var(--line); border-radius: var(--radius); padding: 18px; box-shadow: var(--shadow); }
-    .card h2 { margin: 0 0 8px; font-size: 20px; }
-    .card ul { margin: 10px 0 0 18px; }
-    .muted { color: var(--muted); }
-
-    /* CTA */
-    .cta {
-      margin-top: 20px; display:flex; flex-wrap:wrap; gap:12px; justify-content:center;
-    }
-    .button { display:inline-flex; align-items:center; gap:10px; padding:12px 16px; border-radius: 12px; font-weight:600; text-decoration:none; }
-    .button.primary { background: linear-gradient(135deg, var(--accent), var(--accent-2)); color:white; }
-    .button.ghost { border:1px solid var(--line); color: var(--text); }
-
-    /* FOOTER */
-    footer { text-align:center; color: var(--muted); margin-top: 26px; font-size: 14px; }
-    .links { display:flex; gap:10px; justify-content:center; flex-wrap:wrap; }
+    :root{ --bg:#0b1220; --panel:#111827; --line:#1f2937; --text:#e5e7eb; --muted:#a3a3a3; --accent:#60a5fa; --accent2:#a78bfa; --r:16px; --shadow:0 10px 30px rgba(0,0,0,.35); }
+    @media (prefers-color-scheme: light){ :root{ --bg:#f6f7fb; --panel:#ffffff; --line:#e5e7eb; --text:#0b1220; --muted:#556; --shadow:0 8px 20px rgba(2,6,23,.08); } }
+    *{box-sizing:border-box}
+    body{margin:0;font-family:Inter,system-ui,Segoe UI,Roboto,Helvetica,Arial;line-height:1.65;background:radial-gradient(1400px 600px at 50% -10%, #172554, var(--bg));color:var(--text)}
+    .wrap{max-width:1040px;margin:0 auto;padding:28px 18px 60px}
+    .nav{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px}
+    .brand{display:flex;gap:10px;align-items:center;text-decoration:none;color:inherit}
+    .logo{width:40px;height:40px;border-radius:12px;background:linear-gradient(135deg,var(--accent),var(--accent2));display:flex;align-items:center;justify-content:center;color:white;font-weight:700;box-shadow:var(--shadow)}
+    .btn{padding:10px 14px;border:1px solid var(--line);border-radius:999px;text-decoration:none;color:inherit;cursor:pointer;background:transparent}
+    .btn:hover{background:rgba(255,255,255,.06)}
+    .hero{background:linear-gradient(180deg,rgba(96,165,250,.18),rgba(167,139,250,.12));border:1px solid var(--line);border-radius:20px;padding:28px;text-align:center;box-shadow:var(--shadow)}
+    h1{margin:6px 0 8px;font-size:clamp(28px,5vw,40px)}
+    .tag{color:var(--muted);margin:0}
+    .grid{display:grid;gap:18px;margin-top:20px}
+    @media(min-width:900px){.grid{grid-template-columns:1fr 1fr}}
+    .card{background:var(--panel);border:1px solid var(--line);border-radius:var(--r);padding:18px;box-shadow:var(--shadow)}
+    .card h2{margin:0 0 8px;font-size:20px}
+    .muted{color:var(--muted)}
+    .small{font-size:12px}
+    .row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+    .input{background:transparent;border:1px solid var(--line);border-radius:10px;padding:8px 10px;color:inherit}
+    .progress{height:10px;background:#0b223b;border-radius:999px}
+    .bar{width:0;height:10px;border-radius:999px;background:linear-gradient(90deg,var(--accent),var(--accent2))}
+    .toolbar{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:10px}
+    canvas{background:#0a0a0a;border:1px solid var(--line);border-radius:12px;touch-action:none;width:100%;height:420px}
   </style>
 </head>
 <body>
   <div class="wrap">
     <nav class="nav">
-      <a class="brand" href="#">
-        <div class="brand-logo">JV</div>
-        <span>talldrawing.github.io</span>
-      </a>
-      <div class="links">
-        <a class="btn" href="#about">About</a>
-        <a class="btn" href="#career">Career</a>
-        <a class="btn" href="#interests">Interests</a>
+      <a class="brand" href="#"><div class="logo">JV</div><strong>talldrawing.github.io</strong></a>
+      <div class="row">
+        <a class="btn" href="#jp">日本語</a>
+        <a class="btn" href="#anki">Progress</a>
+        <a class="btn" href="#board">Chalkboard</a>
         <a class="btn" href="#connect">Connect</a>
       </div>
     </nav>
 
-    <header class="hero" id="about">
-      <p class="muted">Notes from a Banker Exploring Tech Sales</p>
-      <h1>Hello, I’m <span style="background:linear-gradient(90deg,var(--accent),var(--accent-2)); -webkit-background-clip:text; background-clip:text; color:transparent;">Joseph Villaflor‑Medina</span></h1>
-      <p>
-        Sales professional moving into tech. I love connecting with people, solving problems, and building relationships that drive growth. 
-        Outside of work I’m studying Japanese 🇯🇵 and pushing PRs in the gym 💪.
-      </p>
-      <div class="cta">
-        <a class="button primary" href="#connect">Get in touch</a>
-        <a class="button ghost" href="./resume.pdf" target="_blank" rel="noopener">Résumé (PDF)</a>
-      </div>
-      <div class="chips" style="margin-top:14px;">
-        <span class="chip">Outbound Prospecting</span>
-        <span class="chip">Lead Qualification</span>
-        <span class="chip">Salesforce CRM</span>
-        <span class="chip">Excel (Pivots)</span>
-        <span class="chip">日本語学習</span>
-      </div>
+    <header class="hero">
+      <h1><span style="background:linear-gradient(90deg,var(--accent),var(--accent2));-webkit-background-clip:text;background-clip:text;color:transparent">Joseph Villaflor Medina</span></h1>
+      <p class="tag">Tech sales in progress · curious about dev tools · 日本語 learner · gym habit</p>
     </header>
 
-    <div class="grid" id="career">
-      <section class="card">
-        <h2>Career Highlights</h2>
-        <ul>
-          <li><strong>#1</strong> in branch credit product sales at Wells Fargo (10+ new credit cards/month).</li>
-          <li>Managed <strong>50+ SMB & high‑net‑worth</strong> client relationships; discovery‑led upsell & cross‑sell.</li>
-          <li><strong>Salesforce CRM:</strong> pipeline tracking, outreach cadences, KPI analysis.</li>
-          <li>Partnered with Legal/Risk/Compliance for compliant onboarding & servicing.</li>
-          <li>BA in Philosophy — <strong>UCLA</strong>.</li>
-        </ul>
+    <!-- Japanese: Word & Grammar of the Day -->
+    <section class="card" id="jp">
+      <h2>Japanese — Word & Grammar of the Day</h2>
+      <p class="muted small">Rotates daily from a local list (no backend). Edit lists in the code anytime.</p>
+      <div id="jpWord"></div>
+      <div id="jpGrammar" style="margin-top:10px"></div>
+      <div class="small muted" style="margin-top:6px">Seed: <span id="seed"></span></div>
+    </section>
+
+    <div class="grid">
+      <!-- Core 2K/6K Progress Tracker -->
+      <section class="card" id="anki">
+        <h2>Study Progress (Core 2K/6K)</h2>
+        <p class="muted small">Private to your browser (localStorage). Update numbers and click Save.</p>
+
+        <div class="row">
+          <label>Reviews today</label>
+          <input class="input" type="number" id="reviews" min="0" style="width:110px"/>
+          <label>New cards today</label>
+          <input class="input" type="number" id="new" min="0" style="width:110px"/>
+          <label>Streak (days)</label>
+          <input class="input" type="number" id="streak" min="0" style="width:110px"/>
+          <button class="btn" id="saveProg">Save</button>
+          <button class="btn" id="markStudied">Mark studied today</button>
+        </div>
+
+        <div style="margin-top:14px" class="row">
+          <label>Total learned</label>
+          <input class="input" type="number" id="learned" min="0" style="width:120px"/>
+          <label>Mature</label>
+          <input class="input" type="number" id="mature" min="0" style="width:120px"/>
+          <label>Deck size</label>
+          <input class="input" type="number" id="deckSize" min="1" value="6000" style="width:120px"/>
+        </div>
+
+        <div style="margin-top:12px">
+          <div class="muted small">Daily Reviews Goal</div>
+          <div class="progress">
+            <div id="progBarDaily" class="bar"></div>
+          </div>
+          <div class="row small muted"><span id="progTextDaily"></span></div>
+        </div>
+
+        <div style="margin-top:14px">
+          <div class="muted small">Overall Learned Progress</div>
+          <div class="progress">
+            <div id="progBarLearned" class="bar"></div>
+          </div>
+          <div class="row small muted"><span id="progTextLearned"></span></div>
+        </div>
+
+        <div class="row small" style="margin-top:10px">
+          <button class="btn" id="exportProg">Export JSON</button>
+          <label for="importFile" class="btn">Import JSON</label>
+          <input id="importFile" type="file" accept="application/json" style="display:none"/>
+        </div>
       </section>
-      <section class="card">
-        <h2>Skills</h2>
-        <ul>
-          <li>Outbound Prospecting · Cold Calling/Emailing · Account Research</li>
-          <li>Client Relationship Management · Presentation</li>
-          <li>Salesforce CRM · Excel (Pivot Tables)</li>
-          <li>Notary Public (CA) · GitHub (beginner)</li>
-        </ul>
-        <p class="muted" style="margin-top:8px;">Actively learning version control & GitHub platform.</p>
+
+      <!-- Digital Chalkboard -->
+      <section class="card" id="board">
+        <h2>Digital Chalkboard</h2>
+        <div class="toolbar">
+          <label>Tool:</label>
+          <button class="btn" id="penBtn" type="button">Pen</button>
+          <button class="btn" id="eraserBtn" type="button">Eraser</button>
+          <label>Size:</label>
+          <input type="range" id="size" min="2" max="24" value="6"/>
+          <button class="btn" id="clear" type="button">Clear</button>
+          <button class="btn" id="saveImg" type="button">Save as PNG</button>
+        </div>
+        <canvas id="chalk" width="800" height="420"></canvas>
+        <p class="muted small">Auto-saves to your browser. Try mouse or touch. "Kilroy was here" ready.</p>
       </section>
     </div>
 
-    <div class="grid" id="interests">
-      <section class="card">
-        <h2>Interests</h2>
-        <ul>
-          <li><strong>Japanese:</strong> daily study; goal to work in Japan with a US tech company.</li>
-          <li><strong>Fitness:</strong> bodybuilding & calisthenics — weighted pull‑ups, dips, conditioning.</li>
-          <li><strong>Tech:</strong> exploring enterprise software & sales strategies.</li>
-        </ul>
-      </section>
-      <section class="card" id="connect">
-        <h2>Connect</h2>
-        <ul>
-          <li><a href="mailto:josephevm415@gmail.com">Email: josephevm415@gmail.com</a></li>
-          <li><a href="https://www.linkedin.com/in/jvm415" target="_blank" rel="noopener">LinkedIn: /in/jvm415</a></li>
-          <li><a href="https://github.com/talldrawing" target="_blank" rel="noopener">GitHub: @talldrawing</a></li>
-        </ul>
-      </section>
-    </div>
+    <!-- Connect -->
+    <section class="card" id="connect" style="margin-top:18px">
+      <h2>Connect</h2>
+      <ul>
+        <li><a href="mailto:josephevm415@gmail.com">Email</a></li>
+        <li><a href="https://www.linkedin.com/in/jvm415" target="_blank" rel="noopener">LinkedIn</a></li>
+        <li><a href="https://github.com/talldrawing" target="_blank" rel="noopener">GitHub</a></li>
+      </ul>
+    </section>
 
-    <footer>
-      © <span id="y"></span> Joseph Villaflor‑Medina — Built with GitHub Pages
-    </footer>
+    <footer class="muted" style="text-align:center;margin-top:22px">© <span id="y"></span> Joseph Villaflor Medina — Built on GitHub Pages</footer>
   </div>
 
-  <script>document.getElementById('y').textContent = new Date().getFullYear();</script>
+  <script>
+    // --- Japanese Word & Grammar of the Day ---
+    const words = [
+      {jp:'挑戦 (ちょうせん)', en:'challenge; try; attempt', ex:'新しい挑戦をする。'},
+      {jp:'習慣 (しゅうかん)', en:'habit; custom', ex:'毎日の習慣を守る。'},
+      {jp:'効率 (こうりつ)', en:'efficiency', ex:'効率よく勉強する。'},
+      {jp:'縁 (えん)', en:'fate; connection', ex:'日本との縁を感じる。'},
+      {jp:'進捗 (しんちょく)', en:'progress', ex:'進捗どうですか。'}
+    ];
+    const grammar = [
+      {pt:'〜ようにする', en:'make an effort to / try to', ex:'毎日日本語を勉強するようにしている。'},
+      {pt:'〜てみる', en:'try doing (as an experiment)', ex:'新しい方法を試してみる。'},
+      {pt:'〜ことにする', en:'decide to do', ex:'毎朝10分間、単語を復習することにした。'},
+      {pt:'〜わけではない', en:"doesn't mean that...", ex:'忙しいわけではないが、予定がある。'},
+      {pt:'〜っぱなし', en:'leave something in a state', ex:'電気をつけっぱなしにしないで。'}
+    ];
+    function daySeed(){ const d = new Date(); return Math.floor(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate())/86400000); }
+    function pick(list){ return list[ daySeed() % list.length ]; }
+    const w = pick(words); const g = pick(grammar);
+    document.getElementById('jpWord').innerHTML = `<strong>Word:</strong> ${w.jp} — ${w.en}<br><span class="muted">例: ${w.ex}</span>`;
+    document.getElementById('jpGrammar').innerHTML = `<strong>Grammar:</strong> ${g.pt} — ${g.en}<br><span class="muted">例: ${g.ex}</span>`;
+    document.getElementById('seed').textContent = daySeed();
+
+    // --- Study Progress (localStorage) ---
+    const GOAL = 100; // daily reviews target; tweak if you want
+    const reviews = document.getElementById('reviews');
+    const news = document.getElementById('new');
+    const streak = document.getElementById('streak');
+    const learned = document.getElementById('learned');
+    const mature = document.getElementById('mature');
+    const deckSizeInput = document.getElementById('deckSize');
+    const progBarDaily = document.getElementById('progBarDaily');
+    const progTextDaily = document.getElementById('progTextDaily');
+    const progBarLearned = document.getElementById('progBarLearned');
+    const progTextLearned = document.getElementById('progTextLearned');
+
+    function clampPct(n){ return Math.max(0, Math.min(100, Math.round(n))); }
+
+    function loadProgress(){
+      const data = JSON.parse(localStorage.getItem('jpProgress') || '{}');
+      reviews.value = data.reviews ?? 0;
+      news.value = data.new ?? 0;
+      streak.value = data.streak ?? 0;
+      learned.value = data.learned ?? 0;
+      mature.value = data.mature ?? 0;
+      deckSizeInput.value = data.deckSize ?? 6000;
+      updateBars();
+    }
+
+    function saveProgress(){
+      const data = {
+        reviews: Number(reviews.value || 0),
+        new: Number(news.value || 0),
+        streak: Number(streak.value || 0),
+        learned: Number(learned.value || 0),
+        mature: Number(mature.value || 0),
+        deckSize: Number(deckSizeInput.value || 6000),
+        lastSaved: new Date().toISOString()
+      };
+      localStorage.setItem('jpProgress', JSON.stringify(data));
+      updateBars();
+    }
+
+    function updateBars(){
+      const rev = Number(reviews.value || 0);
+      const pctDaily = clampPct((rev / GOAL) * 100);
+      progBarDaily.style.width = pctDaily + '%';
+      progTextDaily.textContent = `${rev}/${GOAL} reviews (${pctDaily}%) · New: ${Number(news.value||0)} · Streak: ${Number(streak.value||0)}d`;
+
+      const learnedNum = Number(learned.value || 0);
+      const deck = Math.max(1, Number(deckSizeInput.value || 6000));
+      const pctLearned = clampPct((learnedNum / deck) * 100);
+      progBarLearned.style.width = pctLearned + '%';
+      const mat = Number(mature.value || 0);
+      progTextLearned.textContent = `${learnedNum}/${deck} learned (${pctLearned}%) · Mature: ${mat}`;
+    }
+
+    document.getElementById('saveProg').addEventListener('click', saveProgress);
+    document.getElementById('markStudied').addEventListener('click', () => {
+      const rev = Number(reviews.value || 0);
+      if (rev > 0) {
+        streak.value = Number(streak.value || 0) + 1;
+        saveProgress();
+      } else {
+        alert('Do at least 1 review to count today!');
+      }
+    });
+
+    reviews.addEventListener('input', updateBars);
+    news.addEventListener('input', updateBars);
+    streak.addEventListener('input', updateBars);
+    learned.addEventListener('input', updateBars);
+    mature.addEventListener('input', updateBars);
+    deckSizeInput.addEventListener('input', updateBars);
+
+    document.getElementById('exportProg').addEventListener('click', () => {
+      const data = localStorage.getItem('jpProgress') || '{}';
+      const blob = new Blob([data], {type: 'application/json'});
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = 'jpProgress.json';
+      a.click();
+    });
+
+    document.getElementById('importFile').addEventListener('change', (e) => {
+      const file = e.target.files?.[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = () => {
+        try {
+          const parsed = JSON.parse(reader.result);
+          localStorage.setItem('jpProgress', JSON.stringify(parsed));
+          loadProgress();
+          alert('Progress imported!');
+        } catch (err) {
+          alert('Invalid JSON file.');
+        }
+      };
+      reader.readAsText(file);
+    });
+
+    loadProgress();
+
+    // --- Digital Chalkboard ---
+    const canvas = document.getElementById('chalk');
+    const ctx = canvas.getContext('2d');
+    let drawing=false, lastX=0, lastY=0, size=document.getElementById('size').value, erase=false;
+
+    function resizeForHiDPI(){
+      const ratio = window.devicePixelRatio||1;
+      const w = canvas.clientWidth, h = canvas.clientHeight;
+      if(!w||!h) return;
+      canvas.width = w*ratio; canvas.height = h*ratio; ctx.setTransform(ratio,0,0,ratio,0,0);
+      restoreSketch();
+    }
+
+    function start(x,y){ drawing=true; lastX=x; lastY=y; }
+    function line(x,y){
+      if(!drawing) return;
+      ctx.lineCap='round'; ctx.lineJoin='round';
+      ctx.strokeStyle = erase? '#0a0a0a' : '#e5e7eb';
+      ctx.lineWidth = size;
+      ctx.beginPath(); ctx.moveTo(lastX,lastY); ctx.lineTo(x,y); ctx.stroke();
+      lastX=x; lastY=y; saveSketch();
+    }
+    function end(){ drawing=false; }
+
+    function pos(e){
+      const r=canvas.getBoundingClientRect();
+      if(e.touches){ return {x:e.touches[0].clientX-r.left, y:e.touches[0].clientY-r.top}; }
+      return {x:e.clientX-r.left, y:e.clientY-r.top};
+    }
+
+    canvas.addEventListener('mousedown', e=> start(pos(e).x,pos(e).y));
+    canvas.addEventListener('mousemove', e=> line(pos(e).x,pos(e).y));
+    window.addEventListener('mouseup', end);
+    canvas.addEventListener('touchstart', e=>{e.preventDefault(); const p=pos(e); start(p.x,p.y)});
+    canvas.addEventListener('touchmove', e=>{e.preventDefault(); const p=pos(e); line(p.x,p.y)});
+    canvas.addEventListener('touchend', end);
+
+    document.getElementById('penBtn').onclick=()=>{erase=false};
+    document.getElementById('eraserBtn').onclick=()=>{erase=true};
+    document.getElementById('size').oninput=(e)=> size=e.target.value;
+    document.getElementById('clear').onclick=()=>{ ctx.clearRect(0,0,canvas.width,canvas.height); saveSketch(); };
+    document.getElementById('saveImg').onclick=()=>{
+      const url = canvas.toDataURL('image/png');
+      const a=document.createElement('a'); a.href=url; a.download='chalkboard.png'; a.click();
+    };
+
+    function saveSketch(){ try{ localStorage.setItem('chalkSketch', canvas.toDataURL('image/png')); }catch(e){} }
+    function restoreSketch(){ const data = localStorage.getItem('chalkSketch'); if(!data) return; const img=new Image(); img.onload=()=>{ ctx.drawImage(img,0,0,canvas.clientWidth,canvas.clientHeight); }; img.src=data; }
+
+    const resizeObserver = new ResizeObserver(()=>{ resizeForHiDPI(); });
+    resizeObserver.observe(canvas);
+    window.addEventListener('load', ()=>{ document.getElementById('y').textContent=new Date().getFullYear(); resizeForHiDPI(); });
+  </script>
 </body>
 </html>
