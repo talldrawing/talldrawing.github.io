@@ -132,7 +132,16 @@
           <button class="btn" id="saveImg" type="button">Download PNG</button>
         </div>
         <canvas id="chalk" class="hidden" width="800" height="420"></canvas>
-        <p class="muted small hidden" id="editHint">Editing locally (owner mode). Download PNG and commit it as <code>chalk.png</code> to publish.</p>
+<p class="muted small hidden" id="editHint">
+  Editing locally (owner mode). Download PNG and commit it as <code>chalk.png</code> to publish.
+</p>
+
+<!-- New: Publish row (only shows in owner mode via JS) -->
+<div class="toolbar hidden" id="publishRow">
+  <button class="btn" id="publishBtn" type="button">Publish to Board</button>
+  <span style="opacity:.6;margin-left:8px;">Anyone can overwrite the image</span>
+</div>
+
       </section>
     </div>
 
@@ -347,5 +356,55 @@
     // Footer year
     document.getElementById('y').textContent = new Date().getFullYear();
   </script>
+      // Footer year
+    document.getElementById('y').textContent = new Date().getFullYear();
+  </script>
+
+  <!-- Paste the publish-to-board script here -->
+  <script>
+    const PUBLISH_URL = "https://chalk-worker.joseph-55e.workers.dev/publish"; // <-- replace
+
+    function bustImage() {
+      const img = document.getElementById("chalkPublic");
+      if (!img) return;
+      const url = new URL(img.src, location.origin);
+      url.searchParams.set("ts", Date.now());
+      img.src = url.toString();
+    }
+
+    // Refresh chalk.png every page load
+    bustImage();
+
+    // Enable publish button if owner mode
+    if (OWNER_MODE) {
+      document.getElementById("publishRow")?.classList.remove("hidden");
+
+      document.getElementById("publishBtn")?.addEventListener("click", async () => {
+        const canvas = document.getElementById("chalk");
+        const blob = await new Promise(res => canvas.toBlob(res, "image/png"));
+        if (!blob) return alert("Could not capture canvas");
+
+        const btn = document.getElementById("publishBtn");
+        btn.disabled = true; btn.textContent = "Publishing…";
+        try {
+          const r = await fetch(PUBLISH_URL, {
+            method: "POST",
+            headers: { "Content-Type": "application/octet-stream" },
+            body: blob
+          });
+          if (!r.ok) throw new Error(await r.text());
+          bustImage();
+          alert("Published!");
+        } catch (e) {
+          alert("Failed: " + e.message);
+        } finally {
+          btn.disabled = false; btn.textContent = "Publish to Board";
+        }
+      });
+    }
+  </script>
+</body>
+</html>
+
 </body>
 </html>
