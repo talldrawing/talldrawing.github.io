@@ -3,124 +3,168 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Joseph Villaflor-Medina | Notes from a Banker Exploring Tech Sales</title>
-  <meta name="description" content="Sales professional breaking into tech sales. UCLA grad, CRM-driven, curious about technology.">
+  <title>Joseph Villaflor‑Medina · Notes from a Banker Exploring Tech Sales</title>
+  <meta name="description" content="Sales professional exploring tech sales. UCLA grad. CRM-driven. Japanese learner & fitness enthusiast.">
+  <!-- Font -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   <style>
     :root {
-      --bg: #0f172a;       /* slate-900 */
-      --card: #111827;     /* gray-900 */
-      --soft: #1f2937;     /* gray-800 */
-      --text: #e5e7eb;     /* gray-200 */
-      --muted: #9ca3af;    /* gray-400 */
-      --accent: #60a5fa;   /* blue-400 */
+      --bg: #0b1220;
+      --bg-soft: #0f172a; /* slate-900 */
+      --card: #111827;    /* gray-900 */
+      --muted: #94a3b8;   /* slate-400 */
+      --text: #e5e7eb;    /* gray-200 */
+      --line: #1f2937;    /* gray-800 */
+      --accent: #60a5fa;  /* blue-400 */
+      --accent-2: #a78bfa;/* violet-400 */
+      --radius: 18px;
+      --shadow: 0 10px 30px rgba(0,0,0,.35);
+    }
+    @media (prefers-color-scheme: light) {
+      :root { --bg: #f6f7fb; --bg-soft: #ffffff; --card: #ffffff; --text: #0b1220; --muted:#475569; --line:#e5e7eb; --shadow: 0 8px 20px rgba(2,6,23,.08);} 
+      body { background: linear-gradient(180deg, #eef2ff 0%, #f8fafc 100%) !important; }
     }
     * { box-sizing: border-box; }
+    html, body { height: 100%; }
     body {
       margin: 0;
-      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji","Segoe UI Emoji";
-      background: radial-gradient(1200px 600px at 50% -10%, #1e293b, var(--bg));
+      font-family: 'Inter', system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji","Segoe UI Emoji";
+      background: radial-gradient(1400px 500px at 50% -10%, #172554, var(--bg));
       color: var(--text);
-      line-height: 1.6;
+      line-height: 1.65;
     }
-    .wrap {
-      max-width: 760px;
-      margin: 48px auto 80px;
-      padding: 0 20px;
+    .wrap { max-width: 980px; margin: 0 auto; padding: 28px 20px 80px; }
+
+    /* NAV */
+    .nav {
+      display: flex; align-items: center; justify-content: space-between; gap: 16px; margin-bottom: 28px;
     }
-    header {
-      text-align: center;
-      padding: 36px 20px;
-      background: linear-gradient(180deg, rgba(96,165,250,0.15), transparent);
-      border-radius: 20px;
-      border: 1px solid #1f2937;
+    .brand { display:flex; align-items:center; gap:10px; text-decoration:none; color:inherit; }
+    .brand-logo {
+      width: 40px; height: 40px; border-radius: 12px; background: linear-gradient(135deg, var(--accent), var(--accent-2));
+      box-shadow: var(--shadow);
+      display:flex; align-items:center; justify-content:center; font-weight:700; color:white;
     }
-    h1 { margin: 0 0 8px; font-size: 32px; line-height: 1.2; }
-    .tag { color: var(--muted); margin: 0; font-size: 16px; }
-    section {
-      background: var(--card);
-      border: 1px solid var(--soft);
-      border-radius: 16px;
-      padding: 20px;
-      margin-top: 20px;
+    .brand span { font-weight: 700; letter-spacing: .2px; }
+    .nav a.btn { text-decoration: none; padding: 10px 16px; border:1px solid var(--line); border-radius: 999px; color: var(--text); font-weight:600; }
+    .nav a.btn:hover { border-color: transparent; background: rgba(255,255,255,.06); }
+
+    /* HERO */
+    .hero {
+      background: linear-gradient(180deg, rgba(96,165,250,.18), rgba(167,139,250,.12));
+      border:1px solid var(--line); border-radius: var(--radius); box-shadow: var(--shadow);
+      padding: 36px 24px; text-align: center;
     }
-    h2 { margin: 0 0 8px; font-size: 20px; }
-    ul { padding-left: 20px; margin: 8px 0 0; }
-    a { color: var(--accent); text-decoration: none; }
-    .grid { display: grid; gap: 16px; }
-    @media (min-width: 720px) { .grid { grid-template-columns: 1fr 1fr; } }
-    .pill {
-      display: inline-block; padding: 6px 10px; border: 1px solid var(--soft);
-      border-radius: 999px; font-size: 14px; margin: 4px 6px 0 0; color: var(--muted);
+    .hero h1 { margin: 6px 0 10px; font-size: clamp(28px, 5vw, 40px); line-height: 1.15; }
+    .hero p { color: var(--muted); margin: 0 0 18px; }
+    .chips { display:flex; flex-wrap:wrap; gap:10px; justify-content:center; }
+    .chip { border:1px solid var(--line); padding: 6px 10px; border-radius:999px; color: var(--muted); font-size:14px; }
+
+    /* GRID SECTIONS */
+    .grid { display:grid; gap: 18px; margin-top: 22px; }
+    @media (min-width: 820px){ .grid { grid-template-columns: 1.2fr 1fr; } }
+    .card { background: var(--card); border:1px solid var(--line); border-radius: var(--radius); padding: 18px; box-shadow: var(--shadow); }
+    .card h2 { margin: 0 0 8px; font-size: 20px; }
+    .card ul { margin: 10px 0 0 18px; }
+    .muted { color: var(--muted); }
+
+    /* CTA */
+    .cta {
+      margin-top: 20px; display:flex; flex-wrap:wrap; gap:12px; justify-content:center;
     }
-    .footer { text-align: center; color: var(--muted); margin-top: 24px; font-size: 14px; }
+    .button { display:inline-flex; align-items:center; gap:10px; padding:12px 16px; border-radius: 12px; font-weight:600; text-decoration:none; }
+    .button.primary { background: linear-gradient(135deg, var(--accent), var(--accent-2)); color:white; }
+    .button.ghost { border:1px solid var(--line); color: var(--text); }
+
+    /* FOOTER */
+    footer { text-align:center; color: var(--muted); margin-top: 26px; font-size: 14px; }
+    .links { display:flex; gap:10px; justify-content:center; flex-wrap:wrap; }
   </style>
 </head>
 <body>
   <div class="wrap">
-    <header>
-      <h1>Joseph Villaflor-Medina</h1>
-      <p class="tag">Notes from a Banker Exploring Tech Sales</p>
-      <p class="tag">Sales professional, language learner (日本語), and fitness enthusiast documenting the journey.</p>
+    <nav class="nav">
+      <a class="brand" href="#">
+        <div class="brand-logo">JV</div>
+        <span>talldrawing.github.io</span>
+      </a>
+      <div class="links">
+        <a class="btn" href="#about">About</a>
+        <a class="btn" href="#career">Career</a>
+        <a class="btn" href="#interests">Interests</a>
+        <a class="btn" href="#connect">Connect</a>
+      </div>
+    </nav>
+
+    <header class="hero" id="about">
+      <p class="muted">Notes from a Banker Exploring Tech Sales</p>
+      <h1>Hello, I’m <span style="background:linear-gradient(90deg,var(--accent),var(--accent-2)); -webkit-background-clip:text; background-clip:text; color:transparent;">Joseph Villaflor‑Medina</span></h1>
+      <p>
+        Sales professional moving into tech. I love connecting with people, solving problems, and building relationships that drive growth. 
+        Outside of work I’m studying Japanese 🇯🇵 and pushing PRs in the gym 💪.
+      </p>
+      <div class="cta">
+        <a class="button primary" href="#connect">Get in touch</a>
+        <a class="button ghost" href="./resume.pdf" target="_blank" rel="noopener">Résumé (PDF)</a>
+      </div>
+      <div class="chips" style="margin-top:14px;">
+        <span class="chip">Outbound Prospecting</span>
+        <span class="chip">Lead Qualification</span>
+        <span class="chip">Salesforce CRM</span>
+        <span class="chip">Excel (Pivots)</span>
+        <span class="chip">日本語学習</span>
+      </div>
     </header>
 
-    <section>
-      <h2>About</h2>
-      <p>
-        I’m Joseph — a former Personal Banker moving into tech sales. I love connecting with people,
-        solving problems, and building long-term relationships that drive growth. Outside of work,
-        you’ll find me studying Japanese 🇯🇵 or pushing PRs in the gym 💪.
-      </p>
-    </section>
-
-    <section class="grid">
-      <div>
+    <div class="grid" id="career">
+      <section class="card">
         <h2>Career Highlights</h2>
         <ul>
-          <li>#1 in branch credit product sales at Wells Fargo (10+ new credit cards/month).</li>
-          <li>Managed 50+ SMB & high-net-worth client relationships; discovery-led upsell & cross-sell.</li>
-          <li>Salesforce CRM: pipeline tracking, outreach cadences, KPI analysis.</li>
-          <li>BA in Philosophy — UCLA.</li>
+          <li><strong>#1</strong> in branch credit product sales at Wells Fargo (10+ new credit cards/month).</li>
+          <li>Managed <strong>50+ SMB & high‑net‑worth</strong> client relationships; discovery‑led upsell & cross‑sell.</li>
+          <li><strong>Salesforce CRM:</strong> pipeline tracking, outreach cadences, KPI analysis.</li>
+          <li>Partnered with Legal/Risk/Compliance for compliant onboarding & servicing.</li>
+          <li>BA in Philosophy — <strong>UCLA</strong>.</li>
         </ul>
-      </div>
-      <div>
+      </section>
+      <section class="card">
         <h2>Skills</h2>
-        <span class="pill">Outbound Prospecting</span>
-        <span class="pill">Lead Qualification</span>
-        <span class="pill">Client Success</span>
-        <span class="pill">Salesforce CRM</span>
-        <span class="pill">Excel (Pivots)</span>
-        <span class="pill">Presentation</span>
-        <span class="pill">Notary Public (CA)</span>
-        <span class="pill">GitHub (beginner)</span>
-      </div>
-    </section>
+        <ul>
+          <li>Outbound Prospecting · Cold Calling/Emailing · Account Research</li>
+          <li>Client Relationship Management · Presentation</li>
+          <li>Salesforce CRM · Excel (Pivot Tables)</li>
+          <li>Notary Public (CA) · GitHub (beginner)</li>
+        </ul>
+        <p class="muted" style="margin-top:8px;">Actively learning version control & GitHub platform.</p>
+      </section>
+    </div>
 
-    <section class="grid">
-      <div>
+    <div class="grid" id="interests">
+      <section class="card">
         <h2>Interests</h2>
         <ul>
-          <li><strong>Japanese:</strong> daily Anki study; goal to work in Japan with a US tech company.</li>
-          <li><strong>Fitness:</strong> bodybuilding & calisthenics — weighted pull-ups, dips, conditioning.</li>
-          <li><strong>Tech:</strong> learning version control concepts and the GitHub platform.</li>
+          <li><strong>Japanese:</strong> daily study; goal to work in Japan with a US tech company.</li>
+          <li><strong>Fitness:</strong> bodybuilding & calisthenics — weighted pull‑ups, dips, conditioning.</li>
+          <li><strong>Tech:</strong> exploring enterprise software & sales strategies.</li>
         </ul>
-      </div>
-      <div>
+      </section>
+      <section class="card" id="connect">
         <h2>Connect</h2>
         <ul>
-          <li><a href="mailto:josephevm415@gmail.com">Email</a></li>
-          <li><a href="https://www.linkedin.com/in/jvm415" target="_blank" rel="noopener">LinkedIn</a></li>
+          <li><a href="mailto:josephevm415@gmail.com">Email: josephevm415@gmail.com</a></li>
+          <li><a href="https://www.linkedin.com/in/jvm415" target="_blank" rel="noopener">LinkedIn: /in/jvm415</a></li>
           <li><a href="https://github.com/talldrawing" target="_blank" rel="noopener">GitHub: @talldrawing</a></li>
-          <!-- If you add a PDF named resume.pdf to the repo, this link will work -->
-          <li><a href="./resume.pdf" target="_blank" rel="noopener">Résumé (PDF)</a></li>
         </ul>
-      </div>
-    </section>
+      </section>
+    </div>
 
-    <p class="footer">© <span id="y"></span> Joseph Villaflor-Medina</p>
+    <footer>
+      © <span id="y"></span> Joseph Villaflor‑Medina — Built with GitHub Pages
+    </footer>
   </div>
 
-  <script>
-    document.getElementById('y').textContent = new Date().getFullYear();
-  </script>
+  <script>document.getElementById('y').textContent = new Date().getFullYear();</script>
 </body>
 </html>
