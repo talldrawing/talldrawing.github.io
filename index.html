@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Joseph Villaflor-Medina | Notes from a Banker Exploring Tech Sales</title>
+  <meta name="description" content="Sales professional breaking into tech sales. UCLA grad, CRM-driven, curious about technology.">
+  <style>
+    :root {
+      --bg: #0f172a;       /* slate-900 */
+      --card: #111827;     /* gray-900 */
+      --soft: #1f2937;     /* gray-800 */
+      --text: #e5e7eb;     /* gray-200 */
+      --muted: #9ca3af;    /* gray-400 */
+      --accent: #60a5fa;   /* blue-400 */
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji","Segoe UI Emoji";
+      background: radial-gradient(1200px 600px at 50% -10%, #1e293b, var(--bg));
+      color: var(--text);
+      line-height: 1.6;
+    }
+    .wrap {
+      max-width: 760px;
+      margin: 48px auto 80px;
+      padding: 0 20px;
+    }
+    header {
+      text-align: center;
+      padding: 36px 20px;
+      background: linear-gradient(180deg, rgba(96,165,250,0.15), transparent);
+      border-radius: 20px;
+      border: 1px solid #1f2937;
+    }
+    h1 { margin: 0 0 8px; font-size: 32px; line-height: 1.2; }
+    .tag { color: var(--muted); margin: 0; font-size: 16px; }
+    section {
+      background: var(--card);
+      border: 1px solid var(--soft);
+      border-radius: 16px;
+      padding: 20px;
+      margin-top: 20px;
+    }
+    h2 { margin: 0 0 8px; font-size: 20px; }
+    ul { padding-left: 20px; margin: 8px 0 0; }
+    a { color: var(--accent); text-decoration: none; }
+    .grid { display: grid; gap: 16px; }
+    @media (min-width: 720px) { .grid { grid-template-columns: 1fr 1fr; } }
+    .pill {
+      display: inline-block; padding: 6px 10px; border: 1px solid var(--soft);
+      border-radius: 999px; font-size: 14px; margin: 4px 6px 0 0; color: var(--muted);
+    }
+    .footer { text-align: center; color: var(--muted); margin-top: 24px; font-size: 14px; }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <h1>Joseph Villaflor-Medina</h1>
+      <p class="tag">Notes from a Banker Exploring Tech Sales</p>
+      <p class="tag">Sales professional, language learner (日本語), and fitness enthusiast documenting the journey.</p>
+    </header>
+
+    <section>
+      <h2>About</h2>
+      <p>
+        I’m Joseph — a former Personal Banker moving into tech sales. I love connecting with people,
+        solving problems, and building long-term relationships that drive growth. Outside of work,
+        you’ll find me studying Japanese 🇯🇵 or pushing PRs in the gym 💪.
+      </p>
+    </section>
+
+    <section class="grid">
+      <div>
+        <h2>Career Highlights</h2>
+        <ul>
+          <li>#1 in branch credit product sales at Wells Fargo (10+ new credit cards/month).</li>
+          <li>Managed 50+ SMB & high-net-worth client relationships; discovery-led upsell & cross-sell.</li>
+          <li>Salesforce CRM: pipeline tracking, outreach cadences, KPI analysis.</li>
+          <li>BA in Philosophy — UCLA.</li>
+        </ul>
+      </div>
+      <div>
+        <h2>Skills</h2>
+        <span class="pill">Outbound Prospecting</span>
+        <span class="pill">Lead Qualification</span>
+        <span class="pill">Client Success</span>
+        <span class="pill">Salesforce CRM</span>
+        <span class="pill">Excel (Pivots)</span>
+        <span class="pill">Presentation</span>
+        <span class="pill">Notary Public (CA)</span>
+        <span class="pill">GitHub (beginner)</span>
+      </div>
+    </section>
+
+    <section class="grid">
+      <div>
+        <h2>Interests</h2>
+        <ul>
+          <li><strong>Japanese:</strong> daily Anki study; goal to work in Japan with a US tech company.</li>
+          <li><strong>Fitness:</strong> bodybuilding & calisthenics — weighted pull-ups, dips, conditioning.</li>
+          <li><strong>Tech:</strong> learning version control concepts and the GitHub platform.</li>
+        </ul>
+      </div>
+      <div>
+        <h2>Connect</h2>
+        <ul>
+          <li><a href="mailto:josephevm415@gmail.com">Email</a></li>
+          <li><a href="https://www.linkedin.com/in/jvm415" target="_blank" rel="noopener">LinkedIn</a></li>
+          <li><a href="https://github.com/talldrawing" target="_blank" rel="noopener">GitHub: @talldrawing</a></li>
+          <!-- If you add a PDF named resume.pdf to the repo, this link will work -->
+          <li><a href="./resume.pdf" target="_blank" rel="noopener">Résumé (PDF)</a></li>
+        </ul>
+      </div>
+    </section>
+
+    <p class="footer">© <span id="y"></span> Joseph Villaflor-Medina</p>
+  </div>
+
+  <script>
+    document.getElementById('y').textContent = new Date().getFullYear();
+  </script>
+</body>
+</html>
