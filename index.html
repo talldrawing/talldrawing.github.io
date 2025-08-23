@@ -403,6 +403,43 @@
       });
     }
   </script>
+  <script>
+  const PUBLISH_URL = "https://YOUR-WORKER.workers.dev/publish"; // your real URL
+
+  function bustImage() {
+    const img = document.getElementById("chalkPublic");
+    if (!img) return;
+    const u = new URL(img.src, location.origin);
+    u.searchParams.set("ts", Date.now());
+    img.src = u.toString();
+  }
+  bustImage();
+
+  if (OWNER_MODE) {
+    document.getElementById("publishRow")?.classList.remove("hidden");
+    document.getElementById("publishBtn")?.addEventListener("click", async () => {
+      const canvas = document.getElementById("chalk");
+      const dataUrl = canvas.toDataURL("image/png"); // <- data URL
+      const btn = document.getElementById("publishBtn");
+      btn.disabled = true; btn.textContent = "Publishing…";
+      try {
+        const r = await fetch(PUBLISH_URL, {
+          method: "POST",
+          headers: { "Content-Type": "text/plain" }, // <- simple request (no preflight)
+          body: dataUrl
+        });
+        if (!r.ok) throw new Error(await r.text());
+        bustImage();
+        alert("Published!");
+      } catch (e) {
+        alert("Failed: " + (e?.message || e));
+      } finally {
+        btn.disabled = false; btn.textContent = "Publish to Board";
+      }
+    });
+  }
+</script>
+
 </body>
 </html>
 
