@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Joseph Villaflor‑Medina · Notes & Experiments</title>
+  <title>Joseph Villaflor-Medina · Notes & Experiments</title>
   <meta name="description" content="Interactive page: JP word/grammar of the day, public Core 2K/6K stats (via progress.json), and a public chalkboard image (chalk.png) with owner editing mode.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -52,7 +52,7 @@
     </nav>
 
     <header class="hero">
-      <h1><span style="background:linear-gradient(90deg,var(--accent),var(--accent2));-webkit-background-clip:text;background-clip:text;color:transparent">Joseph Villaflor‑Medina</span></h1>
+      <h1><span style="background:linear-gradient(90deg,var(--accent),var(--accent2));-webkit-background-clip:text;background-clip:text;color:transparent">Joseph Villaflor-Medina</span></h1>
       <p class="tag">Tech sales in progress · curious about dev tools · 日本語：N1への道 · gym rat</p>
     </header>
 
@@ -96,7 +96,7 @@
           <div class="progress">
             <div id="progBarDaily" class="bar"></div>
           </div>
-          <div class="row small muted"><span id="progTextDaily"></span></div>
+            <div class="row small muted"><span id="progTextDaily"></span></div>
         </div>
 
         <div style="margin-top:14px">
@@ -114,14 +114,19 @@
         </div>
       </section>
 
-      <!-- Public Chalkboard (read-only by default, owner can switch to edit mode) -->
+      <!-- Public Chalkboard -->
       <section class="card" id="board">
         <h2>Digital Chalkboard</h2>
-        <p class="note small" id="boardNote">Public display: showing <code>chalk.png</code> from this repo. Only the owner can update it by committing a new image. Add <code>?owner=1</code> to the URL to enable local edit mode.</p>
+        <p class="note small" id="boardNote">
+          Public display: showing <code>chalk.png</code> from this repo. Add <code>?owner=1</code> to enable local edit mode.
+        </p>
 
-        <img id="chalkPublic" class="chalk" src="./chalk.png" alt="Chalkboard image (public)" onerror="this.classList.add('hidden');document.getElementById('noChalk').classList.remove('hidden');" />
-        <p class="muted small hidden" id="noChalk">No <code>chalk.png</code> found yet. Upload one to the repo to display.</p>
+        <!-- Public image -->
+        <img id="chalkPublic" class="chalk" src="./chalk.png" alt="Chalkboard image (public)"
+             onerror="this.classList.add('hidden');document.getElementById('noChalk').classList.remove('hidden');" />
+        <p class="muted small hidden" id="noChalk">No <code>chalk.png</code> found yet. Publish once to create it.</p>
 
+        <!-- Owner tools -->
         <div class="toolbar hidden" id="toolbar">
           <label>Tool:</label>
           <button class="btn" id="penBtn" type="button">Pen</button>
@@ -131,17 +136,17 @@
           <button class="btn" id="clear" type="button">Clear</button>
           <button class="btn" id="saveImg" type="button">Download PNG</button>
         </div>
+
         <canvas id="chalk" class="hidden" width="800" height="420"></canvas>
-<p class="muted small hidden" id="editHint">
-  Editing locally (owner mode). Download PNG and commit it as <code>chalk.png</code> to publish.
-</p>
+        <p class="muted small hidden" id="editHint">
+          Owner mode: draw below, then click <b>Publish to Board</b> to update <code>chalk.png</code> for everyone.
+        </p>
 
-<!-- New: Publish row (only shows in owner mode via JS) -->
-<div class="toolbar hidden" id="publishRow">
-  <button class="btn" id="publishBtn" type="button">Publish to Board</button>
-  <span style="opacity:.6;margin-left:8px;">Anyone can overwrite the image</span>
-</div>
-
+        <!-- Publish row (owner mode only) -->
+        <div class="toolbar hidden" id="publishRow">
+          <button class="btn" id="publishBtn" type="button">Publish to Board</button>
+          <span style="opacity:.6;margin-left:8px;">Anyone can overwrite the image</span>
+        </div>
       </section>
     </div>
 
@@ -155,11 +160,11 @@
       </ul>
     </section>
 
-    <footer class="muted" style="text-align:center;margin-top:22px">© <span id="y"></span> Joseph Villaflor‑Medina — Built on GitHub Pages</footer>
+    <footer class="muted" style="text-align:center;margin-top:22px">© <span id="y"></span> Joseph Villaflor-Medina — Built on GitHub Pages</footer>
   </div>
 
   <script>
-    // --- Owner mode flag (append ?owner=1 to enable local editing of chalkboard) ---
+    // --- Owner mode flag (?owner=1) ---
     const params = new URLSearchParams(location.search);
     const OWNER_MODE = params.get('owner') === '1';
 
@@ -202,13 +207,11 @@
     const inputsRow = document.getElementById('inputsRow');
 
     function clampPct(n){ return Math.max(0, Math.min(100, Math.round(n))); }
-
     function updateBars(goal){
       const rev = Number(reviews.value || 0);
       const pctDaily = clampPct((rev / (goal||GOAL_DEFAULT)) * 100);
       progBarDaily.style.width = pctDaily + '%';
       progTextDaily.textContent = `${rev}/${goal||GOAL_DEFAULT} reviews (${pctDaily}%) · New: ${Number(news.value||0)} · Streak: ${Number(streak.value||0)}d`;
-
       const learnedNum = Number(learned.value || 0);
       const deck = Math.max(1, Number(deckSizeInput.value || 6000));
       const pctLearned = clampPct((learnedNum / deck) * 100);
@@ -216,7 +219,6 @@
       const mat = Number(mature.value || 0);
       progTextLearned.textContent = `${learnedNum}/${deck} learned (${pctLearned}%) · Mature: ${mat}`;
     }
-
     function loadLocal(){
       const data = JSON.parse(localStorage.getItem('jpProgress') || '{}');
       reviews.value = data.reviews ?? 0;
@@ -230,7 +232,6 @@
       importExportRow.classList.remove('hidden');
       inputsRow.classList.remove('hidden');
     }
-
     function saveLocal(){
       const data = {
         reviews: Number(reviews.value || 0),
@@ -245,13 +246,11 @@
       localStorage.setItem('jpProgress', JSON.stringify(data));
       updateBars(data.goal);
     }
-
     async function tryLoadPublic(){
       try {
         const res = await fetch('./progress.json', {cache:'no-store'});
         if(!res.ok) throw new Error('no public progress');
         const p = await res.json();
-        // Fill inputs then lock them (public display)
         reviews.value = p.reviewsToday ?? 0;
         news.value = p.newToday ?? 0;
         streak.value = p.streak ?? 0;
@@ -260,37 +259,24 @@
         deckSizeInput.value = p.deckSize ?? 6000;
         updateBars(p.goal||GOAL_DEFAULT);
         progMode.textContent = 'Public display (from progress.json)';
-        // read-only for visitors
         for (const el of [reviews, news, streak, learned, mature, deckSizeInput]) { el.readOnly = true; el.disabled = true; }
         importExportRow.classList.add('hidden');
         inputsRow.classList.add('hidden');
         return true;
-      } catch(e){
-        return false;
-      }
+      } catch(e){ return false; }
     }
-
     document.getElementById('saveProg')?.addEventListener('click', saveLocal);
     document.getElementById('markStudied')?.addEventListener('click', () => {
       const rev = Number(reviews.value || 0);
-      if (rev > 0) {
-        streak.value = Number(streak.value || 0) + 1;
-        saveLocal();
-      } else {
-        alert('Do at least 1 review to count today!');
-      }
+      if (rev > 0) { streak.value = Number(streak.value || 0) + 1; saveLocal(); }
+      else { alert('Do at least 1 review to count today!'); }
     });
-
     for (const el of [reviews, news, streak, learned, mature, deckSizeInput]) {
       el?.addEventListener('input', ()=>updateBars());
     }
+    (async function initProgress(){ const ok = await tryLoadPublic(); if(!ok){ loadLocal(); } })();
 
-    (async function initProgress(){
-      const ok = await tryLoadPublic();
-      if(!ok){ loadLocal(); }
-    })();
-
-    // --- Chalkboard: public (image) vs owner edit (canvas) ---
+    // --- Chalkboard (owner vs public) ---
     const chalkImg = document.getElementById('chalkPublic');
     const toolbar = document.getElementById('toolbar');
     const canvas = document.getElementById('chalk');
@@ -298,18 +284,13 @@
     const boardNote = document.getElementById('boardNote');
 
     if (OWNER_MODE) {
-      // hide public image; show canvas + tools
       chalkImg.classList.add('hidden');
       toolbar.classList.remove('hidden');
       canvas.classList.remove('hidden');
       editHint.classList.remove('hidden');
-      boardNote.innerHTML = 'Owner mode: draw locally, then Download PNG and commit as <code>chalk.png</code> to publish.';
-    }
-
-    if (OWNER_MODE) {
+      boardNote.innerHTML = 'Owner mode: draw locally, then click <b>Publish to Board</b> to update <code>chalk.png</code>.';
       const ctx = canvas.getContext('2d');
       let drawing=false, lastX=0, lastY=0, size=document.getElementById('size').value, erase=false;
-
       function resizeForHiDPI(){
         const ratio = window.devicePixelRatio||1;
         const w = canvas.clientWidth, h = canvas.clientHeight;
@@ -331,14 +312,12 @@
         if(e.touches){ return {x:e.touches[0].clientX-r.left, y:e.touches[0].clientY-r.top}; }
         return {x:e.clientX-r.left, y:e.clientY-r.top};
       }
-
       canvas.addEventListener('mousedown', e=> start(pos(e).x,pos(e).y));
       canvas.addEventListener('mousemove', e=> line(pos(e).x,pos(e).y));
       window.addEventListener('mouseup', end);
       canvas.addEventListener('touchstart', e=>{e.preventDefault(); const p=pos(e); start(p.x,p.y)});
       canvas.addEventListener('touchmove', e=>{e.preventDefault(); const p=pos(e); line(p.x,p.y)});
       canvas.addEventListener('touchend', end);
-
       document.getElementById('penBtn').onclick=()=>{erase=false};
       document.getElementById('eraserBtn').onclick=()=>{erase=true};
       document.getElementById('size').oninput=(e)=> size=e.target.value;
@@ -347,7 +326,6 @@
         const url = canvas.toDataURL('image/png');
         const a=document.createElement('a'); a.href=url; a.download='chalk.png'; a.click();
       };
-
       const ro = new ResizeObserver(()=>{ resizeForHiDPI(); });
       ro.observe(canvas);
       window.addEventListener('load', resizeForHiDPI);
@@ -356,92 +334,46 @@
     // Footer year
     document.getElementById('y').textContent = new Date().getFullYear();
   </script>
-      // Footer year
-    document.getElementById('y').textContent = new Date().getFullYear();
-  </script>
 
-  <!-- Paste the publish-to-board script here -->
+  <!-- Publish-to-board (data URL to avoid preflight) -->
   <script>
-    const PUBLISH_URL = "https://chalk-worker.joseph-55e.workers.dev/publish"; // <-- replace
+    const PUBLISH_URL = "https://chalk-worker.joseph-55e.workers.dev/publish"; // your Worker URL
 
     function bustImage() {
       const img = document.getElementById("chalkPublic");
       if (!img) return;
-      const url = new URL(img.src, location.origin);
-      url.searchParams.set("ts", Date.now());
-      img.src = url.toString();
+      const u = new URL(img.src, location.origin);
+      u.searchParams.set("ts", Date.now());
+      img.src = u.toString();
     }
-
-    // Refresh chalk.png every page load
+    // Always show freshest chalk.png on load
     bustImage();
 
-    // Enable publish button if owner mode
     if (OWNER_MODE) {
+      // show the publish row
       document.getElementById("publishRow")?.classList.remove("hidden");
-
+      // publish handler
       document.getElementById("publishBtn")?.addEventListener("click", async () => {
         const canvas = document.getElementById("chalk");
-        const blob = await new Promise(res => canvas.toBlob(res, "image/png"));
-        if (!blob) return alert("Could not capture canvas");
-
+        const dataUrl = canvas.toDataURL("image/png"); // send as data URL (simple request)
         const btn = document.getElementById("publishBtn");
         btn.disabled = true; btn.textContent = "Publishing…";
         try {
           const r = await fetch(PUBLISH_URL, {
             method: "POST",
-            headers: { "Content-Type": "application/octet-stream" },
-            body: blob
+            headers: { "Content-Type": "text/plain" }, // avoids preflight
+            body: dataUrl
           });
           if (!r.ok) throw new Error(await r.text());
           bustImage();
           alert("Published!");
         } catch (e) {
-          alert("Failed: " + e.message);
+          alert("Failed: " + (e?.message || e));
         } finally {
           btn.disabled = false; btn.textContent = "Publish to Board";
         }
       });
     }
   </script>
-  <script>
-  const PUBLISH_URL = "https://YOUR-WORKER.workers.dev/publish"; // your real URL
-
-  function bustImage() {
-    const img = document.getElementById("chalkPublic");
-    if (!img) return;
-    const u = new URL(img.src, location.origin);
-    u.searchParams.set("ts", Date.now());
-    img.src = u.toString();
-  }
-  bustImage();
-
-  if (OWNER_MODE) {
-    document.getElementById("publishRow")?.classList.remove("hidden");
-    document.getElementById("publishBtn")?.addEventListener("click", async () => {
-      const canvas = document.getElementById("chalk");
-      const dataUrl = canvas.toDataURL("image/png"); // <- data URL
-      const btn = document.getElementById("publishBtn");
-      btn.disabled = true; btn.textContent = "Publishing…";
-      try {
-        const r = await fetch(PUBLISH_URL, {
-          method: "POST",
-          headers: { "Content-Type": "text/plain" }, // <- simple request (no preflight)
-          body: dataUrl
-        });
-        if (!r.ok) throw new Error(await r.text());
-        bustImage();
-        alert("Published!");
-      } catch (e) {
-        alert("Failed: " + (e?.message || e));
-      } finally {
-        btn.disabled = false; btn.textContent = "Publish to Board";
-      }
-    });
-  }
-</script>
-
-</body>
-</html>
-
 </body>
 </html>
