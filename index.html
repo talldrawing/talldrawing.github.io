@@ -4,7 +4,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Joseph Villaflor-Medina · Notes & Experiments</title>
-  <meta name="description" content="Interactive page: JP word/grammar of the day, public Core 2K/6K stats (via progress.json), and a public chalkboard image (chalk.png) with owner editing mode.">
+  <meta name="description" content="Interactive page: JP word/grammar of the day, public Core 2K/6K stats, and a communal chalkboard (chalk.png).">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
@@ -93,40 +93,42 @@
 
         <div style="margin-top:12px">
           <div class="muted small">Daily Reviews Goal</div>
-          <div class="progress">
-            <div id="progBarDaily" class="bar"></div>
-          </div>
-            <div class="row small muted"><span id="progTextDaily"></span></div>
+          <div class="progress"><div id="progBarDaily" class="bar"></div></div>
+          <div class="row small muted"><span id="progTextDaily"></span></div>
         </div>
 
         <div style="margin-top:14px">
           <div class="muted small">Overall Learned Progress</div>
-          <div class="progress">
-            <div id="progBarLearned" class="bar"></div>
-          </div>
+          <div class="progress"><div id="progBarLearned" class="bar"></div></div>
           <div class="row small muted"><span id="progTextLearned"></span></div>
         </div>
 
-        <div class="row small" style="margin-top:10px" id="importExportRow">
+        <div class="row small" id="importExportRow" style="margin-top:10px">
           <button class="btn" id="exportProg">Export JSON</button>
           <label for="importFile" class="btn">Import JSON</label>
           <input id="importFile" type="file" accept="application/json" style="display:none"/>
         </div>
       </section>
 
-      <!-- Public Chalkboard -->
+      <!-- Communal Chalkboard -->
       <section class="card" id="board">
         <h2>Digital Chalkboard</h2>
         <p class="note small" id="boardNote">
-          Public display: showing <code>chalk.png</code> from this repo. Add <code>?owner=1</code> to enable local edit mode.
+          Communal board: anyone can draw and <b>Publish to Board</b>. The image below is the current shared <code>chalk.png</code>.
         </p>
 
         <!-- Public image -->
         <img id="chalkPublic" class="chalk" src="./chalk.png" alt="Chalkboard image (public)"
              onerror="this.classList.add('hidden');document.getElementById('noChalk').classList.remove('hidden');" />
-        <p class="muted small hidden" id="noChalk">No <code>chalk.png</code> found yet. Publish once to create it.</p>
+        <p class="muted small hidden" id="noChalk">No <code>chalk.png</code> yet. Click <b>Start drawing</b> and publish to create it.</p>
 
-        <!-- Owner tools -->
+        <!-- Edit toggle -->
+        <div class="toolbar" id="editRow">
+          <button class="btn" id="startEditBtn" type="button">Start drawing</button>
+          <button class="btn hidden" id="cancelEditBtn" type="button">Cancel</button>
+        </div>
+
+        <!-- Drawing tools (hidden until editing) -->
         <div class="toolbar hidden" id="toolbar">
           <label>Tool:</label>
           <button class="btn" id="penBtn" type="button">Pen</button>
@@ -139,10 +141,10 @@
 
         <canvas id="chalk" class="hidden" width="800" height="420"></canvas>
         <p class="muted small hidden" id="editHint">
-          Owner mode: draw below, then click <b>Publish to Board</b> to update <code>chalk.png</code> for everyone.
+          Editing mode: starts with the latest board. Draw below, then click <b>Publish to Board</b>.
         </p>
 
-        <!-- Publish row (owner mode only) -->
+        <!-- Publish (shown in edit mode) -->
         <div class="toolbar hidden" id="publishRow">
           <button class="btn" id="publishBtn" type="button">Publish to Board</button>
           <span style="opacity:.6;margin-left:8px;">Anyone can overwrite the image</span>
@@ -164,11 +166,11 @@
   </div>
 
   <script>
-    // --- Owner mode flag (?owner=1) ---
+    // --- Owner flag still supported: ?owner=1 auto-enters edit mode
     const params = new URLSearchParams(location.search);
     const OWNER_MODE = params.get('owner') === '1';
 
-    // --- Japanese Word & Grammar of the Day ---
+    // --- JP Word & Grammar of the Day ---
     const words = [
       {jp:'挑戦 (ちょうせん)', en:'challenge; try; attempt', ex:'新しい挑戦をする。'},
       {jp:'習慣 (しゅうかん)', en:'habit; custom', ex:'毎日の習慣を守る。'},
@@ -208,94 +210,110 @@
 
     function clampPct(n){ return Math.max(0, Math.min(100, Math.round(n))); }
     function updateBars(goal){
-      const rev = Number(reviews.value || 0);
+      const rev = Number(reviews?.value || 0);
       const pctDaily = clampPct((rev / (goal||GOAL_DEFAULT)) * 100);
       progBarDaily.style.width = pctDaily + '%';
-      progTextDaily.textContent = `${rev}/${goal||GOAL_DEFAULT} reviews (${pctDaily}%) · New: ${Number(news.value||0)} · Streak: ${Number(streak.value||0)}d`;
-      const learnedNum = Number(learned.value || 0);
-      const deck = Math.max(1, Number(deckSizeInput.value || 6000));
+      progTextDaily.textContent = `${rev}/${goal||GOAL_DEFAULT} reviews (${pctDaily}%) · New: ${Number(news?.value||0)} · Streak: ${Number(streak?.value||0)}d`;
+
+      const learnedNum = Number(learned?.value || 0);
+      const deck = Math.max(1, Number(deckSizeInput?.value || 6000));
       const pctLearned = clampPct((learnedNum / deck) * 100);
       progBarLearned.style.width = pctLearned + '%';
-      const mat = Number(mature.value || 0);
-      progTextLearned.textContent = `${learnedNum}/${deck} learned (${pctLearned}%) · Mature: ${mat}`;
+      progTextLearned.textContent = `${learnedNum}/${deck} learned (${pctLearned}%) · Mature: ${Number(mature?.value || 0)}`;
     }
+
     function loadLocal(){
       const data = JSON.parse(localStorage.getItem('jpProgress') || '{}');
-      reviews.value = data.reviews ?? 0;
-      news.value = data.new ?? 0;
-      streak.value = data.streak ?? 0;
-      learned.value = data.learned ?? 0;
-      mature.value = data.mature ?? 0;
-      deckSizeInput.value = data.deckSize ?? 6000;
+      if (reviews) reviews.value = data.reviews ?? 0;
+      if (news) news.value = data.new ?? 0;
+      if (streak) streak.value = data.streak ?? 0;
+      if (learned) learned.value = data.learned ?? 0;
+      if (mature) mature.value = data.mature ?? 0;
+      if (deckSizeInput) deckSizeInput.value = data.deckSize ?? 6000;
       updateBars(data.goal||GOAL_DEFAULT);
       progMode.textContent = 'Private to your browser (local mode)';
       importExportRow.classList.remove('hidden');
       inputsRow.classList.remove('hidden');
     }
+
     function saveLocal(){
       const data = {
-        reviews: Number(reviews.value || 0),
-        new: Number(news.value || 0),
-        streak: Number(streak.value || 0),
-        learned: Number(learned.value || 0),
-        mature: Number(mature.value || 0),
-        deckSize: Number(deckSizeInput.value || 6000),
+        reviews: Number(reviews?.value || 0),
+        new: Number(news?.value || 0),
+        streak: Number(streak?.value || 0),
+        learned: Number(learned?.value || 0),
+        mature: Number(mature?.value || 0),
+        deckSize: Number(deckSizeInput?.value || 6000),
         goal: GOAL_DEFAULT,
         lastSaved: new Date().toISOString()
       };
       localStorage.setItem('jpProgress', JSON.stringify(data));
       updateBars(data.goal);
     }
+
     async function tryLoadPublic(){
       try {
         const res = await fetch('./progress.json', {cache:'no-store'});
         if(!res.ok) throw new Error('no public progress');
         const p = await res.json();
-        reviews.value = p.reviewsToday ?? 0;
-        news.value = p.newToday ?? 0;
-        streak.value = p.streak ?? 0;
-        learned.value = p.learned ?? 0;
-        mature.value = p.mature ?? 0;
-        deckSizeInput.value = p.deckSize ?? 6000;
+        if (reviews) reviews.value = p.reviewsToday ?? 0;
+        if (news) news.value = p.newToday ?? 0;
+        if (streak) streak.value = p.streak ?? 0;
+        if (learned) learned.value = p.learned ?? 0;
+        if (mature) mature.value = p.mature ?? 0;
+        if (deckSizeInput) deckSizeInput.value = p.deckSize ?? 6000;
         updateBars(p.goal||GOAL_DEFAULT);
         progMode.textContent = 'Public display (from progress.json)';
-        for (const el of [reviews, news, streak, learned, mature, deckSizeInput]) { el.readOnly = true; el.disabled = true; }
+        for (const el of [reviews, news, streak, learned, mature, deckSizeInput]) { el?.setAttribute('disabled',''); el?.setAttribute('readonly',''); }
         importExportRow.classList.add('hidden');
         inputsRow.classList.add('hidden');
         return true;
       } catch(e){ return false; }
     }
+
     document.getElementById('saveProg')?.addEventListener('click', saveLocal);
     document.getElementById('markStudied')?.addEventListener('click', () => {
-      const rev = Number(reviews.value || 0);
-      if (rev > 0) { streak.value = Number(streak.value || 0) + 1; saveLocal(); }
+      const rev = Number(reviews?.value || 0);
+      if (rev > 0) { if (streak) streak.value = Number(streak.value || 0) + 1; saveLocal(); }
       else { alert('Do at least 1 review to count today!'); }
     });
-    for (const el of [reviews, news, streak, learned, mature, deckSizeInput]) {
-      el?.addEventListener('input', ()=>updateBars());
-    }
+    for (const el of [reviews, news, streak, learned, mature, deckSizeInput]) el?.addEventListener('input', ()=>updateBars());
     (async function initProgress(){ const ok = await tryLoadPublic(); if(!ok){ loadLocal(); } })();
 
-    // --- Chalkboard (owner vs public) ---
+    // --- Communal Chalkboard ---
     const chalkImg = document.getElementById('chalkPublic');
+    const noChalk = document.getElementById('noChalk');
     const toolbar = document.getElementById('toolbar');
     const canvas = document.getElementById('chalk');
     const editHint = document.getElementById('editHint');
     const boardNote = document.getElementById('boardNote');
+    const startBtn = document.getElementById('startEditBtn');
+    const cancelBtn = document.getElementById('cancelEditBtn');
+    const publishRow = document.getElementById('publishRow');
 
-    if (OWNER_MODE) {
-      chalkImg.classList.add('hidden');
-      toolbar.classList.remove('hidden');
-      canvas.classList.remove('hidden');
-      editHint.classList.remove('hidden');
-      boardNote.innerHTML = 'Owner mode: draw locally, then click <b>Publish to Board</b> to update <code>chalk.png</code>.';
+    // bust cache for the <img> so viewers always see latest
+    function bustImage() {
+      const img = document.getElementById("chalkPublic");
+      if (!img) return;
+      const u = new URL(img.src, location.origin);
+      u.searchParams.set("ts", Date.now());
+      img.src = u.toString();
+    }
+    bustImage();
+
+    // Initialize canvas & tools once
+    let initialized = false;
+    function initCanvasIfNeeded(){
+      if (initialized) return;
       const ctx = canvas.getContext('2d');
       let drawing=false, lastX=0, lastY=0, size=document.getElementById('size').value, erase=false;
+
       function resizeForHiDPI(){
         const ratio = window.devicePixelRatio||1;
         const w = canvas.clientWidth, h = canvas.clientHeight;
         if(!w||!h) return;
-        canvas.width = w*ratio; canvas.height = h*ratio; ctx.setTransform(ratio,0,0,ratio,0,0);
+        canvas.width = w*ratio; canvas.height = h*ratio;
+        ctx.setTransform(ratio,0,0,ratio,0,0);
       }
       function start(x,y){ drawing=true; lastX=x; lastY=y; }
       function line(x,y){
@@ -312,12 +330,14 @@
         if(e.touches){ return {x:e.touches[0].clientX-r.left, y:e.touches[0].clientY-r.top}; }
         return {x:e.clientX-r.left, y:e.clientY-r.top};
       }
+
       canvas.addEventListener('mousedown', e=> start(pos(e).x,pos(e).y));
       canvas.addEventListener('mousemove', e=> line(pos(e).x,pos(e).y));
       window.addEventListener('mouseup', end);
       canvas.addEventListener('touchstart', e=>{e.preventDefault(); const p=pos(e); start(p.x,p.y)});
       canvas.addEventListener('touchmove', e=>{e.preventDefault(); const p=pos(e); line(p.x,p.y)});
       canvas.addEventListener('touchend', end);
+
       document.getElementById('penBtn').onclick=()=>{erase=false};
       document.getElementById('eraserBtn').onclick=()=>{erase=true};
       document.getElementById('size').oninput=(e)=> size=e.target.value;
@@ -326,54 +346,88 @@
         const url = canvas.toDataURL('image/png');
         const a=document.createElement('a'); a.href=url; a.download='chalk.png'; a.click();
       };
-      const ro = new ResizeObserver(()=>{ resizeForHiDPI(); });
+
+      const ro = new ResizeObserver(resizeForHiDPI);
       ro.observe(canvas);
       window.addEventListener('load', resizeForHiDPI);
+
+      initialized = true;
     }
+
+    // Draw current chalk.png onto the canvas so edits continue from the latest
+    function loadExistingChalk(ctx, canvas) {
+      return new Promise((resolve) => {
+        const img = new Image();
+        img.crossOrigin = "anonymous"; // safe for same-origin GitHub Pages
+        img.src = "./chalk.png?ts=" + Date.now(); // cache-bust
+        img.onload = () => {
+          const ratio = window.devicePixelRatio || 1;
+          ctx.clearRect(0, 0, canvas.width, canvas.height);
+          ctx.drawImage(img, 0, 0, canvas.width / ratio, canvas.height / ratio);
+          resolve();
+        };
+        img.onerror = () => resolve(); // no existing image yet is fine
+      });
+    }
+
+    async function enterEdit(){
+      chalkImg?.classList.add('hidden');
+      noChalk?.classList.add('hidden');
+      toolbar?.classList.remove('hidden');
+      canvas?.classList.remove('hidden');
+      editHint?.classList.remove('hidden');
+      publishRow?.classList.remove('hidden');
+      startBtn?.classList.add('hidden');
+      cancelBtn?.classList.remove('hidden');
+      boardNote.innerHTML = 'Editing mode (communal): draw below, then <b>Publish to Board</b>.';
+
+      initCanvasIfNeeded();
+      // Wait a tick to ensure ResizeObserver sets width/height, then draw the existing image
+      await new Promise(r => requestAnimationFrame(r));
+      const ctx = canvas.getContext('2d');
+      await loadExistingChalk(ctx, canvas);
+    }
+
+    function exitEdit(){
+      toolbar?.classList.add('hidden');
+      canvas?.classList.add('hidden');
+      editHint?.classList.add('hidden');
+      publishRow?.classList.add('hidden');
+      cancelBtn?.classList.add('hidden');
+      startBtn?.classList.remove('hidden');
+      chalkImg?.classList.remove('hidden');
+      bustImage();
+      boardNote.innerHTML = 'Communal board: anyone can draw and <b>Publish to Board</b>. The image below is the current shared <code>chalk.png</code>.';
+    }
+
+    document.getElementById('startEditBtn')?.addEventListener('click', enterEdit);
+    document.getElementById('cancelEditBtn')?.addEventListener('click', exitEdit);
+    if (OWNER_MODE) { enterEdit(); } // auto-open if ?owner=1
+
+    // --- Publish-to-board (data URL = simple, no preflight) ---
+    const PUBLISH_URL = "https://chalk-worker.joseph-55e.workers.dev/publish";
+    document.getElementById("publishBtn")?.addEventListener("click", async () => {
+      const dataUrl = canvas.toDataURL("image/png");
+      const btn = document.getElementById("publishBtn");
+      btn.disabled = true; btn.textContent = "Publishing…";
+      try {
+        const r = await fetch(PUBLISH_URL, {
+          method: "POST",
+          headers: { "Content-Type": "text/plain" },
+          body: dataUrl
+        });
+        if (!r.ok) throw new Error(await r.text());
+        bustImage();
+        alert("Published!");
+      } catch (e) {
+        alert("Failed: " + (e?.message || e));
+      } finally {
+        btn.disabled = false; btn.textContent = "Publish to Board";
+      }
+    });
 
     // Footer year
     document.getElementById('y').textContent = new Date().getFullYear();
-  </script>
-
-  <!-- Publish-to-board (data URL to avoid preflight) -->
-  <script>
-    const PUBLISH_URL = "https://chalk-worker.joseph-55e.workers.dev/publish"; // your Worker URL
-
-    function bustImage() {
-      const img = document.getElementById("chalkPublic");
-      if (!img) return;
-      const u = new URL(img.src, location.origin);
-      u.searchParams.set("ts", Date.now());
-      img.src = u.toString();
-    }
-    // Always show freshest chalk.png on load
-    bustImage();
-
-    if (OWNER_MODE) {
-      // show the publish row
-      document.getElementById("publishRow")?.classList.remove("hidden");
-      // publish handler
-      document.getElementById("publishBtn")?.addEventListener("click", async () => {
-        const canvas = document.getElementById("chalk");
-        const dataUrl = canvas.toDataURL("image/png"); // send as data URL (simple request)
-        const btn = document.getElementById("publishBtn");
-        btn.disabled = true; btn.textContent = "Publishing…";
-        try {
-          const r = await fetch(PUBLISH_URL, {
-            method: "POST",
-            headers: { "Content-Type": "text/plain" }, // avoids preflight
-            body: dataUrl
-          });
-          if (!r.ok) throw new Error(await r.text());
-          bustImage();
-          alert("Published!");
-        } catch (e) {
-          alert("Failed: " + (e?.message || e));
-        } finally {
-          btn.disabled = false; btn.textContent = "Publish to Board";
-        }
-      });
-    }
   </script>
 </body>
 </html>
